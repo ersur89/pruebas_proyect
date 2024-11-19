@@ -65,6 +65,36 @@ function generateTranscript() {
                     // Accede al texto del primer elemento del array
                     const generatedText = textoContent[0].text;
                     transcriptionOutput.innerText = generatedText; // Muestra el texto generado
+
+                    //bloque graba preguntas
+                    // Llamado a la API para guardar preguntas y opciones
+                    /* fetch('/api/save-questions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            texto: {
+                                content: textoContent
+                            }
+                        })
+                    })
+                    .then(response =>2 {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(saveResponse => {
+                        console.log("Preguntas y opciones guardadas:", saveResponse);
+                        transcriptionOutput.innerText += "\n\nPreguntas y opciones guardadas exitosamente en la base de datos.";
+                    })
+                    .catch(error => {
+                        console.error("Error al guardar preguntas:", error);
+                        transcriptionOutput.classList.add("error");
+                        transcriptionOutput.innerText += "\n\nError al guardar las preguntas: " + error.message;
+                    }); */
+
                 } else {
                     // Maneja el caso en que 'content' no esté presente o sea vacío
                     transcriptionOutput.classList.add("error");
