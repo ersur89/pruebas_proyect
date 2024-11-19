@@ -31,6 +31,9 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const { AssemblyAI } = require('assemblyai');
 
+const { CohereClientV2 } = require('cohere-ai');
+
+
 const app = express();
 const PORT = 3000;
 
@@ -56,7 +59,7 @@ app.post('/transcribe', async (req, res) => {
     const config = {
         audio_url: url,
         language_code: 'es',
-        audio_end_at: 280000,
+        audio_end_at: 380000,
         audio_start_from: 10
     };
 
@@ -72,10 +75,14 @@ app.post('/transcribe', async (req, res) => {
 
 app.post('/generate-questions', async (req, res) => {
   const { content } = req.body;
-console.log(content)
+  console.log(content)
   if (!content) {
     return res.status(400).json({ error: "Contenido no proporcionado" });
   }
+  
+  const cohere = new CohereClientV2({
+    token: 'QYGtWwsD3cNvr5KdCoUl9y6eQBmg6y9yCI35ZEqm',
+  });
 
   try {
     const response = await cohere.chat({
@@ -89,31 +96,6 @@ console.log(content)
     });
 
     const texto = response.message;
-    /* const regexPreguntas = /Pregunta (\d+): (.+?)(?=(Pregunta \d+:|\n$))/gs;
-
-    let preguntas = [];
-    let match;
-
-    while ((match = regexPreguntas.exec(texto)) !== null) {
-      const numeroPregunta = match[1].trim(); // Número de la pregunta
-      const preguntaTexto = match[2].trim();  // Texto de la pregunta
-
-      const regexOpciones = /\d+\. (.+)/g;
-      let opciones = [];
-      let matchOpciones;
-
-      while ((matchOpciones = regexOpciones.exec(preguntaTexto)) !== null) {
-        opciones.push(matchOpciones[1].trim()); // Extraer y limpiar las opciones
-      }
-
-      preguntas.push({
-        id: numeroPregunta,
-        texto: preguntaTexto.split('\n')[0], // Tomar solo el texto de la pregunta
-        opciones: opciones.length > 0 ? opciones : null, // Solo incluir opciones si existen
-      });
-    } */
-
-    //res.json({ texto });
     res.json({ texto: response.message });
   } catch (error) {
     console.error("Error generando preguntas:", error);
